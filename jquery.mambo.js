@@ -9,14 +9,14 @@
     var name = "mambo",
         defaults = {
             percentage: 100,
-            circleColor: "#F2AC29",
+            circleColor: "#0088CC",
             circleBorder: "#FFF",
             ringStyle: "percentage",
-            ringColor: "#F2762E",
+            ringColor: "#41FFE5",
             ringBackground: "#CCC",
             labelColor: "#FFF",
             displayValue: true,
-            drawShadow: false
+            drawShadow: true
         },
         radConst = Math.PI / 180,
         fullCircle = 2 * Math.PI;
@@ -33,11 +33,12 @@
         init: function () {
             if(this.checkCanvas()) {
                 this.context = this.element.getContext('2d');
+                this.context.clearRect(0, 0, this.element.width, this.element.height);
                 this.percentage = this.options.percentage * 3.6;
                 this.points = this.getPoints();
                 $(this.element).css({"width": this.points.width + "px", "height": this.points.width + "px"});
                 this.linesAndRadiuses = this.getLinesAndRadiuses();
-                this.drawPercentage();
+                this.drawPercentage();               
                 if(this.options.ringStyle === "full" && this.percentage !== 360) {
                     this.drawExtraPercentage();
                 }
@@ -49,7 +50,7 @@
                     this.drawImage();
                 } else {
                     this.drawText();
-                }
+                }               
             }
         },
         drawInternalCircle: function () {
@@ -113,7 +114,7 @@
             this.context.fillStyle = this.options.labelColor;
             this.context.textBaseline = "bottom";
             if(this.options.displayValue) {
-                fontPx = this.points.width / 3.5;
+                fontPx = this.points.width / 4;
                 this.context.font = "bold " + fontPx + "px helvetica";
                 if(this.options.label && this.options.label.length > 0) {
                     this.context.fillText(this.options.label, this.points.x, this.points.x + this.linesAndRadiuses.internalRadius / 25);
@@ -136,7 +137,7 @@
                 x: this.element.width / 2,
                 angle: {
                     start: (this.percentage === 360) ? 0 : 270 * radConst,
-                    end: (this.percentage === 360) ? fullCircle : (this.percentage - 90) * radConst
+                    end: (this.percentage === 360) ? fullCircle : (this.percentage === 0) ? 270 * radConst : (this.percentage - 90) * radConst
                 }
             };
         },
@@ -145,7 +146,7 @@
                 shadowRadius = this.points.x - shadowLine / 2,
                 externalRadius = shadowRadius,
                 internalLine = this.points.width / 35,
-                internalRadius = externalRadius * 0.8;
+                internalRadius = externalRadius * 0.7;
             return {
                 shadowLine: shadowLine,
                 shadowRadius: shadowRadius,
@@ -158,10 +159,8 @@
     // Plugin wrapper
     $.fn[name] = function (options) {
         return this.each(function () {
-            if (!$.data(this, "plugin_" + name)) {
                 $.data(this, "plugin_" + name,
                     new Mambo(this, options));
-            }
         });
     };
 })(jQuery, window, document);
