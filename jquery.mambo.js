@@ -68,6 +68,10 @@
             this.context.beginPath();
             this.context.moveTo(this.points.x, this.points.x);
             this.context.arc(this.points.x, this.points.x, this.linesAndRadiuses.externalRadius, this.points.angle.start, this.points.angle.end, false);
+            this.context.shadowColor = this.options.ringColor;
+            this.context.shadowBlur = 3;
+            this.context.shadowOffsetX = 0;
+            this.context.shadowOffsetY = 0;
             this.context.closePath();
             this.context.fillStyle = this.options.ringColor;
             this.context.fill();
